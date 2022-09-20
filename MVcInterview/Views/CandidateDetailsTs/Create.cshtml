@@ -9,9 +9,10 @@
 
 <h4>CandidateDetailsT</h4>
 <hr />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="CandidateName" class="control-label"></label>
@@ -40,11 +41,17 @@
             </div>
             <div class="form-group">
                 <label asp-for="CreatedDate" class="control-label"></label>
-                <input asp-for="CreatedDate" class="form-control" />
+                <input asp-for="CreatedDate" value="@DateTime.Today.ToString("yyyy-MM-dd")" disabled class="form-control" />
                 <span asp-validation-for="CreatedDate" class="text-danger"></span>
             </div>
+             <div class="col-md-10">
+            <p>Upload  Resume/Files</p>
+            <input type="file" name="files"  />
+            </div>
+            <br/>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                @*<input type="submit" value="Create" onclick="Save();" class="btn btn-primary" />*@
+                <input type="submit" value="Create"  class="btn btn-primary" />
             </div>
         </form>
     </div>
@@ -55,5 +62,38 @@
 </div>
 
 @section Scripts {
+    <script type="text/javascript">
+        function Save() {
+            var Name = $('#CandidateName').val();
+            var Exp = $('#CandidateExperience').val();
+            var Phno = $('#CandidatePhoneNo').val();
+            var Mailid = $('#CandidateMailId').val();
+            var Skills = $('#CandidateSkills').val();
+            var obj =
+            {
+                CandidateName: Name,
+                CandidateExperience: Exp,
+                CandidatePhoneNo: Phno,
+                CandidateMailId: Mailid,
+                CandidateSkills: Skills,
+            };
+            $.ajax({
+                type: "POST",
+                url: "/CandidateDetailsTs/Save",
+                //contentType: 'application/json; charset=utf-8',
+                data: obj,
+                success: function (data) {
+                    alert(1);
+                    var obj = data;
+                    alert(data);
+                },
+                error: function (req, status, error) {
+
+                }
+            });
+        }
+    </script>
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+  
 }
+    
